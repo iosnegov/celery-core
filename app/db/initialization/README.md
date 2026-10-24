@@ -1,14 +1,14 @@
-# **Redis ACL Configuration for Celery**
+# Redis ACL Configuration for Celery
 
 This section defines a role-based access control (RBAC) model for Redis, using dedicated users with purpose-driven permissions tailored for Celery's operational requirements.
 
-## **I. Administrative User**
+## I. Administrative User
 
 ```bash
 user ${REDIS_ADMIN_NAME} on >${REDIS_ADMIN_PASSWORD} ~* &* +@all
 ```
 
-### **Assigned permissions**
+### Assigned permissions
 
 - **`~*`**  
     Full access to all keyspaces, enabling management of any data stored in Redis.
@@ -17,17 +17,17 @@ user ${REDIS_ADMIN_NAME} on >${REDIS_ADMIN_PASSWORD} ~* &* +@all
 - **`+@all`**  
     Grants execution rights to every Redis command category, including administrative and dangerous operations.
 
-### **Role purpose**
+### Role purpose
 
 Provides full administrative control over the Redis instance.
 
-## **II. Celery User**
+## II. Celery User
 
 ```bash
 user ${REDIS_USER_NAME} on >${REDIS_USER_PASSWORD} ~* &* +@all -@dangerous -@admin
 ```
 
-### **Assigned permissions**
+### Assigned permissions
 
 - **`~*`**  
     Grants access to all keys in the Redis instance across all database indexes.
@@ -44,7 +44,7 @@ user ${REDIS_USER_NAME} on >${REDIS_USER_PASSWORD} ~* &* +@all -@dangerous -@adm
 - **`-@admin`**  
     Explicitly revokes administrative commands that affect server configuration and management (e.g., `SHUTDOWN`, `BGSAVE`, `ACL`). This ensures the Celery user cannot perform administrative operations that should be reserved for dedicated admin accounts.
 
-### **Role purpose**
+### Role purpose
 
 This user is designed specifically for Celery's operational needs, which require extensive Redis functionality including:
 - Task queuing and message passing.
@@ -56,7 +56,7 @@ This user is designed specifically for Celery's operational needs, which require
 
 While this configuration is broader than the strictest least-privilege model, it represents a reasonable balance between security best practices and educational purposes of this project.
 
-## **III. Security: Disable the default user**
+## III. Security: Disable the default user
 
 ```bash
 user default off nopass

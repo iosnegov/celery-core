@@ -1,20 +1,20 @@
-# **Application Structure**
+# Application Structure
 
 *This README provides a high-level architectural overview of the project: what each component is for and why it exists. For implementation details refer to the docstrings and comments inside each file.*
 
-## I. **`shared/base_config.py`**
+## I. `shared/base_config.py`
 
 Provides a base configuration class built with Pydantic, designed for inheritance by other configuration classes to enable consistent loading of settings from `.env` with strict validation and module-specific prefixes.
 
-## II. **`db/`**
+## II. `db/`
 
 Database layer. Contains Redis configuration and bootstrapping scripts for ACL and user permissions.
 
-### i. **`config.py`**
+### i. `config.py`
 
 Provides Redis configuration singleton built with Pydantic, loaded from `.env` with strict validation. Defines settings for connection, authentication, and client behavior.
 
-### ii. **`initialization/`**
+### ii. `initialization/`
 
 Bootstrapping scripts and configuration for Redis ACL and user permissions.
 
@@ -30,31 +30,31 @@ Bootstrapping scripts and configuration for Redis ACL and user permissions.
     - what permissions each one holds,
     - why those specific permissions are granted.
 
-## III. **`task_queue/`**
+## III. `task_queue/`
 
 Task queue layer. Contains Celery configuration, exchange and queue definitions, worker management, and mock task implementations.
 
-### i. **`config.py`**
+### i. `config.py`
 
 Provides Celery configuration singleton built with Pydantic, loaded from `.env` with strict validation. Defines settings for broker, result backend, serialization, queue names, and other Celery-specific parameters.
 
-### ii. **`exchange.py`**
+### ii. `exchange.py`
 
 Provides the shared Kombu exchange instance used for routing messages to task queues. A single direct exchange is used for all queues following the standard direct exchange pattern.
 
-### iii. **`queue.py`**
+### iii. `queue.py`
 
 Defines the CPU-bound and I/O-bound task queues, each bound to the shared exchange via a direct routing key matching the queue name.
 
-### iv. **`instance.py`**
+### iv. `instance.py`
 
 Provides the main Celery application instance singleton, pre-configured from validated settings with registered queues and exchange, ready to define and execute tasks.
 
-### v. **`tasks/__init__.py`**
+### v. `tasks/__init__.py`
 
 Provides mock task implementations that demonstrate CPU-bound and I/O-bound workload patterns, including retry policies and queue routing.
 
-### vi. **`workers/`**
+### vi. `workers/`
 
 Contains worker configuration and management logic.
 
